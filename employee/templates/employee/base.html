@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Banking Management{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body class="bg-gray-100">
+    <!-- Message Box Container -->
+    <div id="message-container" class="fixed bottom-4 right-4 z-50 w-96">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="mb-4 p-4 rounded-lg shadow-lg border-l-4 toast-message {% if message.tags == 'success' %}bg-green-100 border-green-500 text-green-700{% elif message.tags == 'error' %}bg-red-100 border-red-500 text-red-700{% elif message.tags == 'warning' %}bg-yellow-100 border-yellow-500 text-yellow-700{% else %}bg-blue-100 border-blue-500 text-blue-700{% endif %}">
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <i class="fas {% if message.tags == 'success' %}fa-check-circle{% elif message.tags == 'error' %}fa-exclamation-circle{% elif message.tags == 'warning' %}fa-exclamation-triangle{% else %}fa-info-circle{% endif %} mr-2"></i>
+                            <p class="font-medium">{{ message }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="w-64 h-screen bg-gray-800 text-white fixed top-0 left-0 overflow-y-auto shadow-lg z-50">
+        <ul>
+            <!-- Bank Logo/Name -->
+            <a href="{% url 'bank_dashboard' %}" class="block">
+                <li class="bg-blue-600 p-4 flex items-center">
+                    <span class="bg-white p-3 rounded-lg mr-4">
+                        <i class="fa-solid fa-building-columns text-4xl text-black"></i>
+                    </span>
+                    <span class="text-xl font-medium">OBS</span>
+                </li>
+            </a>
+    
+            <!-- Dashboard -->
+            <a href="{% url 'bank_dashboard' %}">
+                <li class="px-5 py-4 hover:bg-blue-600 cursor-pointer transition-colors duration-300 {% if request.path == '/staff/dashboard/' %}bg-blue-600{% endif %}">
+                    <span class="mr-3"><i class="fa-solid fa-gauge-high"></i></span>
+                    Dashboard
+                </li>
+            </a>
+    
+            <!-- Create Account -->
+            <a href="{% url 'create_account' %}">
+                <li class="px-5 py-3 hover:bg-blue-500 cursor-pointer transition-colors duration-300 {% if request.path == '/staff/create_account/' %}bg-blue-600{% endif %}">
+                    <span class="mr-3"><i class="fa-solid fa-user-plus"></i></span>
+                    Create Account
+                </li>
+            </a>
+    
+            <!-- Manage Accounts -->
+            <a href="{% url 'manage_accounts' %}">
+                <li class="px-5 py-3 hover:bg-blue-500 cursor-pointer transition-colors duration-300 {% if request.path == '/staff/manage_accounts/' %}bg-blue-600{% endif %}">
+                    <span class="mr-3"><i class="fa-solid fa-cogs"></i></span>
+                    Manage Accounts
+                </li>
+            </a>
+    
+            <!-- Transactions -->
+            <a href="{% url 'transactions_in_bank' %}">
+                <li class="px-5 py-4 hover:bg-blue-600 cursor-pointer transition-colors duration-300 {% if request.path == '/staff/transactions/' %}bg-blue-600{% endif %}">
+                    <span class="mr-3"><i class="fa-solid fa-credit-card"></i></span>
+                    Transactions
+                </li>
+            </a>
+    
+            <!-- Announcement -->
+            <a href="{% url 'announcements' %}">
+                <li class="px-5 py-4 hover:bg-blue-600 cursor-pointer transition-colors duration-300 {% if request.path == '/staff/announcements/' %}bg-blue-600{% endif %}">
+                    <span class="mr-3"><i class="fa-solid fa-bullhorn"></i></span>
+                    Announcements
+                </li>
+            </a>
+        </ul>
+    </aside>
+
+    <!-- Navbar -->
+    <nav class="fixed top-0 right-0 bg-gray-700 text-white py-6 px-5 z-40 ml-64" style="width: calc(100% - 16rem);">
+        <ul class="flex justify-between items-center m-0 p-0 list-none">
+            <li>
+                <i class="fa-solid fa-bars mr-6 text-xl cursor-pointer hover:text-blue-500"></i>
+            </li>
+            <div class="flex items-center space-x-4">
+                <li>
+                    <a href="{% url 'admin_logout' %}" class="flex items-center px-4 py-2 rounded-md hover:bg-blue-600 transition-colors duration-300">
+                        <i class="fa-solid fa-right-from-bracket mr-2"></i>
+                        Logout
+                    </a>
+                </li>
+            </div>
+        </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="ml-64 mt-24 p-6">
+        {% block content %}
+        <!-- Your page content will go here -->
+        {% endblock %}
+    </main>
+
+    <!-- Add custom styles and animations -->
+    <style>
+        @keyframes slideInUp {
+            from {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideOutDown {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100%);
+                opacity: 0;
+            }
+        }
+
+        .toast-message {
+            animation: slideInUp 0.3s ease-out forwards;
+        }
+
+        .toast-message.hiding {
+            animation: slideOutDown 0.3s ease-in forwards;
+        }
+    </style>
+
+    <!-- Add JavaScript for automatic disappearance -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.toast-message');
+            
+            messages.forEach(message => {
+                // Set timeout to start hiding after 3 seconds
+                setTimeout(() => {
+                    message.classList.add('hiding');
+                    // Remove the message after animation completes
+                    setTimeout(() => {
+                        message.remove();
+                    }, 300); // Match animation duration
+                }, 3000);
+            });
+        });
+    </script>
+</body>
+</html>

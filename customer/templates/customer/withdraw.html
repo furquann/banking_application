@@ -1,0 +1,31 @@
+{% extends "customer/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h4 class="text-xl font-semibold">Withdraw</h4>
+        <hr class="my-4">
+
+        <form method="POST" action="{% url 'withdraw' %}" class="space-y-6 max-w-md">
+            {% csrf_token %}
+            <div>
+                <label for="account-number" class="block text-gray-700 font-medium mb-2">Account Number</label>
+                <input type="text" id="account_number" name="account_number" class="block w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-300" value="{{ account_number }}" readonly required>
+            </div>
+
+            <h3 class="text-lg font-semibold">Current Balance: ₹{{ balance }}</h3>
+            <hr>
+
+            <div>
+                <label for="withdraw-amount" class="block text-gray-700 font-medium mb-2">Withdraw Amount</label>
+                <input type="number" id="withdraw-amount" name="withdraw_amount" class="block w-full border border-gray-300 rounded-md px-4 py-2" value="0" required>
+            </div>
+
+            <div class="flex space-x-4">
+                <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600">Submit</button>
+                <button type="button" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300" onclick="window.location.href='{% url 'home' %}'">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

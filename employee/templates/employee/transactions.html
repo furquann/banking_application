@@ -1,0 +1,94 @@
+{% extends "employee/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h5 class="text-xl font-semibold">List of Transactions</h5>
+        </div>
+        <hr class="my-4">
+
+        <nav class="flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <span class="text-gray-600 mr-2">Show</span>
+                <input type="number" class="border border-gray-300 rounded-md w-20 px-2 py-1" value="10">
+                <span class="text-gray-600 ml-2">entries</span>
+            </div>
+
+            <form class="flex items-center" action="/" method="GET">
+                <span class="text-gray-600 mr-2">Search:</span>
+                <input type="search" name="query" class="border border-gray-300 rounded-md px-2 py-1">
+            </form>
+        </nav>
+
+        <table class="min-w-full border-collapse border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Transaction ID</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">From Account</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">To Account</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Transaction Type</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Amount</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Transaction Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in page_obj %}
+                <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ transaction.id }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ transaction.account_id.account_number }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{% if transaction.recipient %}{{ transaction.recipient.username }}{% else %}{% endif %}</td>
+                    <td class="border border-gray-300 px-4 py-2 
+                        {% if transaction.type == 'withdraw' %}text-red-500 
+                        {% elif transaction.type == 'transfer' %}text-blue-500 
+                        {% elif transaction.type == 'deposit' %}text-green-500{% endif %} 
+                        font-semibold">
+                        {{ transaction.get_type_display }}
+                    </td>
+
+                    <td class="border border-gray-300 px-4 py-2
+                        {% if transaction.type == 'withdraw' %}text-red-500 
+                        {% elif transaction.type == 'transfer' %}text-blue-500 
+                        {% elif transaction.type == 'deposit' %}text-green-500{% endif %}
+                        font-semibold">
+                        {{ transaction.amount|floatformat:2 }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ transaction.date_created }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="text-center py-4">No transactions found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+            
+        </table>
+
+        <nav class="flex justify-between items-center mt-4">
+            <div>
+                <p class="text-gray-600">Showing 1 to 1 of 1 entries</p>
+            </div>
+
+            <ul class="flex space-x-2">
+                <li>
+                    <a class="px-3 py-1 bg-gray-200 text-gray-500 rounded-md cursor-not-allowed">Previous</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">1</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-blue-500 text-white rounded-md">2</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">3</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}

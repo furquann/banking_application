@@ -1,0 +1,90 @@
+{% extends "employee/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h5 class="text-xl font-semibold">List of Announcements</h5>
+            <a href="{% url 'new_announcement' %}" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                <i class="fas fa-plus mr-2 text-lg"></i> Create New
+            </a>
+        </div>
+        <hr class="my-4">
+
+        <nav class="flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <span class="text-gray-600 mr-2">Show</span>
+                <input type="number" class="border border-gray-300 rounded-md w-20 px-2 py-1" value="10">
+                <span class="text-gray-600 ml-2">entries</span>
+            </div>
+
+            <form class="flex items-center" action="/" method="GET">
+                <span class="text-gray-600 mr-2">Search:</span>
+                <input type="search" name="query" class="border border-gray-300 rounded-md px-2 py-1">
+            </form>
+        </nav>
+
+        <table class="min-w-full border-collapse border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Date Created</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Title</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Announcement</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Date Last Updated</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for announcement in announcements %}
+                    <tr class="odd:bg-white even:bg-gray-50">
+                        <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ announcement.date_created|date:"Y-m-d" }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ announcement.title }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ announcement.announcement }}</td>
+                        <td class="border border-gray-300 px-4 py-2">{{ announcement.date_updated|date:"Y-m-d" }}</td>
+                        <td class="border border-gray-300 px-6 py-3">
+                            <div class="flex space-x-4">
+                                <a href="{% url 'edit_announcement' announcement.id %}" class="text-blue-500 hover:text-blue-700 text-xl">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </a>
+                                <a href="{% url 'delete_announcement' announcement.id %}" class="text-red-500 hover:text-red-700 text-xl">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">No announcements available.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <nav class="flex justify-between items-center mt-4">
+            <div>
+                <p class="text-gray-600">Showing {{ announcements.count }} entries</p>
+            </div>
+
+            <ul class="flex space-x-2">
+                <li>
+                    <a class="px-3 py-1 bg-gray-200 text-gray-500 rounded-md cursor-not-allowed">Previous</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">1</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-blue-500 text-white rounded-md">2</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">3</a>
+                </li>
+                <li>
+                    <a href="#" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}

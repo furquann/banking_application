@@ -1,0 +1,26 @@
+{% extends "employee/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h4 class="text-xl font-semibold text-red-600">Confirm Deletion</h4>
+        <hr class="my-4">
+
+        <p class="text-gray-700">
+            Are you sure you want to delete the announcement titled: <strong>{{ announcement.title }}</strong>?
+        </p>
+
+        <form method="POST" class="mt-4">
+            {% csrf_token %}
+            <div class="flex space-x-4">
+                <button type="submit" class="px-6 py-2 bg-red-500 text-white rounded-md shadow hover:bg-red-600">
+                    Yes, Delete
+                </button>
+                <a href="{% url 'announcements' %}" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300">
+                    Cancel
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

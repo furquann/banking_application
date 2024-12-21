@@ -1,0 +1,29 @@
+{% extends "employee/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h4 class="text-xl font-semibold">Create New Announcement</h4>
+        <hr class="my-4">
+
+        <form method="POST" class="space-y-6 max-w-md">
+            {% csrf_token %}
+            
+            <div>
+                <label for="announcement-title" class="block text-gray-700 font-medium mb-2">Title</label>
+                <input type="text" id="announcement-title" name="title" class="block w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-50" required>
+            </div>
+
+            <div>
+                <label for="announcement-body" class="block text-gray-700 font-medium mb-2">Body</label>
+                <textarea id="announcement-body" name="announcement" rows="6" class="block w-full border border-gray-300 rounded-md px-4 py-2 bg-gray-50 text-lg" required></textarea>
+            </div>
+
+            <div class="flex space-x-4">
+                <button type="submit" class="px-6 py-2 bg-blue-500 text-white rounded-md shadow hover:bg-blue-600">Create Announcement</button>
+                <a href="{% url 'announcements' %}" class="px-6 py-2 bg-gray-200 text-gray-700 rounded-md shadow hover:bg-gray-300">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock content %}

@@ -1,0 +1,122 @@
+{% extends "customer/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h5 class="text-xl font-semibold">Transactions</h5>
+        <hr class="my-4">
+
+        <nav class="flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <span class="text-gray-600 mr-2">Show</span>
+                <input type="number" class="border border-gray-300 rounded-md w-20 px-2 py-1" value="10">
+                <span class="text-gray-600 ml-2">entries</span>
+            </div>
+
+            <form class="flex items-center" action="{% url 'transactions' %}" method="GET">
+                <span class="text-gray-600 mr-2">Search:</span>
+                <input type="search" name="query" class="border border-gray-300 rounded-md px-2 py-1" value="{{ search_query }}">
+            </form>
+        </nav>
+
+        <table class="min-w-full border-collapse border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2">#</th>
+                    <th class="border border-gray-300 px-4 py-2">Date Created</th>
+                    <th class="border border-gray-300 px-4 py-2">Transaction Type</th>
+                    <th class="border border-gray-300 px-4 py-2">Amount</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for transaction in transactions %}
+                <tr class="odd:bg-white even:bg-gray-50">
+                    <!-- Counter -->
+                    <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                    
+                    <!-- Date -->
+                    <td class="border border-gray-300 px-4 py-2">{{ transaction.date_created }}</td>
+                    
+                    <!-- Type with Context -->
+                    <td class="border border-gray-300 px-4 py-2 
+                        {% if transaction.type == 'withdraw' %}text-red-500 
+                        {% elif transaction.type == 'transfer' %}               
+                            {% if transaction.recipient == user %}
+                                text-green-500
+                            {% else %}
+                                text-red-500
+                            {% endif %} 
+                        {% elif transaction.type == 'deposit' %}text-green-500{% endif %}
+                        font-semibold">
+                        {% if transaction.type == 'withdraw' %}
+                            Withdrawn
+                        {% elif transaction.type == 'transfer' %}
+                            {% if transaction.recipient == user %}
+                                Received from '{{ transaction.account_id.user.username }}'
+                            {% else %}
+                                Transferred to '{{ transaction.recipient.username }}'
+                            {% endif %}
+                        {% elif transaction.type == 'deposit' %}
+                            Deposited
+                        {% endif %}
+                    </td>
+                    
+                    <!-- Amount -->
+                    <td class="border border-gray-300 px-4 py-2 
+                        {% if transaction.type == 'withdraw' %}text-red-500 
+                        {% elif transaction.type == 'transfer' %}               
+                            {% if transaction.recipient == user %}
+                                text-green-500
+                            {% else %}
+                                text-red-500
+                            {% endif %} 
+                        {% elif transaction.type == 'deposit' %}text-green-500{% endif %}
+                        font-semibold">
+                        {% if transaction.type == 'withdraw' %}- 
+                        {% elif transaction.type == 'transfer' %}
+                            {% if transaction.recipient == user %}
+                                +  <!-- Received -->
+                            {% else %}
+                                -  <!-- Sent -->
+                            {% endif %}
+                        {% elif transaction.type == 'deposit' %}+
+                        {% endif %}{{ transaction.amount }}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" class="text-center py-2">No transactions found</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            
+        </table>
+
+        <nav class="flex justify-between items-center mt-4">
+            <div>
+                <p class="text-gray-600">
+                    Showing {{ transactions.start_index }} to {{ transactions.end_index }} of {{ transactions.paginator.count }} entries
+                </p>
+            </div>
+
+            <ul class="flex space-x-2">
+                {% if transactions.has_previous %}
+                <li>
+                    <a href="?page={{ transactions.previous_page_number }}" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">Previous</a>
+                </li>
+                {% endif %}
+                {% for num in transactions.paginator.page_range %}
+                <li>
+                    <a href="?page={{ num }}" class="px-3 py-1 rounded-md {% if num == transactions.number %}bg-blue-500 text-white{% else %}bg-gray-200 text-gray-600{% endif %}">{{ num }}</a>
+                </li>
+                {% endfor %}
+                {% if transactions.has_next %}
+                <li>
+                    <a href="?page={{ transactions.next_page_number }}" class="px-3 py-1 bg-gray-200 text-gray-600 rounded-md">Next</a>
+                </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endblock content %}

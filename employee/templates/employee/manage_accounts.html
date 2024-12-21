@@ -1,0 +1,72 @@
+{% extends "employee/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <div class="flex justify-between items-center mb-4">
+            <h5 class="text-xl font-semibold">List of Accounts</h5>
+            <a href="{% url 'create_account' %}" class="px-4 py-2 bg-blue-500 text-white rounded-md">
+                <i class="fas fa-plus mr-2 text-lg"></i> Create Account
+            </a>
+        </div>
+        <hr class="my-4">
+
+        <nav class="flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <span class="text-gray-600 mr-2">Show</span>
+                <input type="number" class="border border-gray-300 rounded-md w-20 px-2 py-1" value="10">
+                <span class="text-gray-600 ml-2">entries</span>
+            </div>
+
+            <form class="flex items-center" method="GET" action="{% url 'manage_accounts' %}">
+                <input id="search_query" type="search" name="query" class="border border-gray-300 rounded-md px-2 py-1" value="{{ request.GET.query|default:'' }}">
+                <button type="submit" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md">Search</button>
+            </form>
+            
+            
+        </nav>
+
+        <table class="min-w-full border-collapse border border-gray-300 rounded-lg">
+            <thead class="bg-gray-100">
+                <tr>
+                    <th class="border border-gray-300 px-4 py-2 text-left">#</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Account No</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Name</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Current Balance</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Date Added</th>
+                    <th class="border border-gray-300 px-4 py-2 text-left">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for account in accounts %}
+                <tr class="odd:bg-white even:bg-gray-50">
+                    <td class="border border-gray-300 px-4 py-2">{{ forloop.counter }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ account.account_number }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ account.first_name }} {{ account.last_name }}</td>
+                    <td class="border border-gray-300 px-4 py-2">₹{{ account.balance }}</td>
+                    <td class="border border-gray-300 px-4 py-2">{{ account.created_at|date:"Y-m-d" }}</td>
+                    <td class="border border-gray-300 px-4 py-2">
+                        <div class="flex space-x-4">
+                            <a href="{% url 'edit_account' account_id=account.id %}" class="text-blue-500 hover:text-blue-700 text-xl">
+                                <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a href="{% url 'delete_account' account_id=account.id %}" class="text-red-500 hover:text-red-700 text-xl">
+                                <i class="fas fa-trash-alt"></i>
+                            </a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6" class="text-center text-gray-500 py-4">No accounts found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <nav class="flex justify-between items-center mt-4">
+            <p class="text-gray-600">Showing {{ accounts|length }} entries</p>
+        </nav>
+    </div>
+</div>
+{% endblock content %}

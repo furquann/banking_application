@@ -1,0 +1,40 @@
+{% extends "employee/base.html" %}
+
+{% block content %}
+<div class="max-w-7xl mx-auto py-10">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <!-- Heading -->
+        <div class="mb-6">
+            <h1 class="text-3xl font-semibold text-gray-800">Banking System Overview</h1>
+            <p class="text-gray-600 mt-2">A quick overview of the bank's system performance and data</p>
+        </div>
+
+        <!-- Stats Cards Section -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+            <!-- Total Accounts Card -->
+            <div class="bg-indigo-600 text-white rounded-lg p-6 shadow-md">
+                <h2 class="text-2xl font-semibold">Total Accounts</h2>
+                <p class="mt-2 text-3xl">{{ accounts_count }}</p>
+                <p class="mt-4 text-sm">Total number of accounts registered in the system.</p>
+            </div>
+
+            <!-- Total Balance Card -->
+            <div class="bg-teal-600 text-white rounded-lg p-6 shadow-md">
+                <h2 class="text-2xl font-semibold">Total Account Balance</h2>
+                <p class="mt-2 text-3xl">₹{{ total_balance }}</p>
+                <p class="mt-4 text-sm">The combined balance across all accounts in the system.</p>
+            </div>
+
+            <!-- Total Transactions Card -->
+            <div class="bg-orange-600 text-white rounded-lg p-6 shadow-md">
+                <h2 class="text-2xl font-semibold">Total Transactions</h2>
+                <p class="mt-2 text-3xl">{{ total_transactions }}</p>
+                <p class="mt-4 text-sm">The total number of transactions recorded.</p>
+            </div>
+        </div>
+
+        <hr class="my-6">
+
+    </div>
+</div>
+{% endblock content %}
